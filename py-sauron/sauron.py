@@ -38,7 +38,7 @@ def fetch(url):
     retry_strategy = Retry(backoff_factor=1,
                            total=10,
                            status_forcelist=[429, 500, 502, 503, 504],
-                           method_whitelist=["HEAD", "GET", "OPTIONS"])
+                           allowed_methods=["HEAD", "GET", "OPTIONS"])
     adapter = HTTPAdapter(max_retries=retry_strategy)
 
     session.mount("https://", adapter)
@@ -105,7 +105,9 @@ def getchaininfo(plugin, **kwargs):
         "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943":
         "test",
         "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206":
-        "regtest"
+        "regtest",
+        "00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6":
+        "signet"
     }
 
     genesis_req = fetch(blockhash_url)
@@ -293,31 +295,31 @@ def estimatefees(plugin, **kwargs):
     Raises:
         None.
     """
-    feerate_url = "{}/fee-estimates".format(plugin.api_endpoint)
+    feerate_url = "{}v1/fees/recommended".format(plugin.api_endpoint)
 
     feerate_req = fetch(feerate_url)
-    assert feerate_req.status_code == 200
+    plugin.log(feerate_req.text)
+    assert feerate_req.status_code == 200, "Failed to fetch from the new API endpoint."
     feerates = feerate_req.json()
-    if plugin.sauron_network == "test":
-        # FIXME: remove the hack if the test API is "fixed"
-        feerate = feerates.get("144", 1)
-        slow = normal = urgent = very_urgent = int(feerate * 10**3)
-    else:
-        # It returns sat/vB, we want sat/kVB, so multiply everything by 10**3
-        slow = int(feerates["144"] * 10**3)
-        normal = int(feerates["5"] * 10**3)
-        urgent = int(feerates["3"] * 10**3)
-        very_urgent = int(feerates["2"] * 10**3)
+
+    # Assigning the fees
+    fastest = feerates["fastestFee"]
+    half_hour = feerates["halfHourFee"]
+    hour = feerates["hourFee"]
+    economy = feerates["economyFee"]
+    minimum = feerates["minimumFee"]
+
+    assert all(fee is not None for fee in [fastest, half_hour, hour, economy, minimum]), "Fee values can't be None."
 
     return {
-        "opening": normal,
-        "mutual_close": normal,
-        "unilateral_close": very_urgent,
-        "delayed_to_us": normal,
-        "htlc_resolution": urgent,
-        "penalty": urgent,
-        "min_acceptable": slow // 2,
-        "max_acceptable": very_urgent * 10,
+        "opening": half_hour,
+        "mutual_close": half_hour,
+        "unilateral_close": fastest,
+        "delayed_to_us": half_hour,
+        "htlc_resolution": hour,
+        "penalty": hour,
+        "min_acceptable": economy,
+        "max_acceptable": fastest * 10,
     }
 
 
