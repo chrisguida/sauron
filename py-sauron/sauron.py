@@ -129,6 +129,8 @@ def getchaininfo(plugin, **kwargs):
 
     # We wouldn't be able to hit it if its bitcoind wasn't synced, so
     # ibd = false and headercount = blockcount
+
+    plugin.log(f"Blockcount: {blockcount_req.text}")
     return {
         "chain": plugin.sauron_network,
         "blockcount": blockcount_req.text,
@@ -139,8 +141,7 @@ def getchaininfo(plugin, **kwargs):
 
 @plugin.method("getrawblockbyheight")
 def getrawblock(plugin, height, **kwargs):
-    """
-    Get a raw block at the given height.
+    """Get a raw block at the given height.
 
     Args:
         plugin: The plugin instance.
