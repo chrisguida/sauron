@@ -1,6 +1,11 @@
-# estimatefees
+# estimatefees: ensuring your TXs have high enough feerates to be included in a block
 
-`estimatefees`: Estimate fees for various lightning transactions.
+This method is extremely important! The security assumption of your lightning channel is that you'll be able to get a closing transction (mutual, unilateral, or justice that you're holding) included in a block. But lightning channels are 2/2 multisigs: you need your channel party to sign a new transaction with you if you want to update your channel state or your reserve transactions. 
+
+Estimatefees is important because your node needs to be confident it can get its channel close TXs included in a timely manner. In fact, if you and your channel partner significantly disagree on the current fee rate estimates, you CLN node will attempt to close the channel. That's how important accurate feerates are!
+
+This is the pseudocode for `estimatefees`...
+
 ```python
 @plugin.method("estimatefees")
 def estimatefees(plugin, **kwargs):
@@ -22,3 +27,6 @@ def estimatefees(plugin, **kwargs):
     """
     pass
 ```
+
+
+In high fee environments (like when people go on inscribing crazes or just in a few years when blocks are always full and fee spikes are more common), there are various attacks like "pinning" that nodes can do to try to prevent your transaction from getting confirmed. If they can pin you past when your justice transaction can sweep, your channel party might be able to steal from you.
