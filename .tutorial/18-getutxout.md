@@ -1,6 +1,10 @@
-# getutxout
+# getutxout: Look up a specific outpoint
 
-`getutxout`: Get the UTXO at the given transaction ID and output index.
+This method is used to look up the specific utxos for your channels or other channels you're interested in. We return back the amount and script to confirm they match our expectations from the transaction we negotiated with our channel partner.
+
+The pseudocode for `getutxout` is...
+
+
 ```python
 def getutxout(plugin, txid, vout, **kwargs):
     """
@@ -20,3 +24,9 @@ def getutxout(plugin, txid, vout, **kwargs):
     """
     pass
 ```
+
+Try implementing it yourself! Read on for implementation details.
+
+## `getutxout` Implementation
+
+Another easy one! 
