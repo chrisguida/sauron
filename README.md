@@ -21,7 +21,7 @@ You need to:
 Here is a fully reptilian example running against [blockstream.info](https://blockstream.info/):
 
 ```
-lightningd --mainnet --disable-plugin bcli --plugin $PWD/py-sauron/sauron.py --sauron-api-endpoint https://blockstream.info/api/
+lightningd --mainnet --disable-plugin bcli --plugin $PWD/sauron.py --sauron-api-endpoint https://blockstream.info/api/
 ```
 
 You can use also proxy your requests through [Tor](https://www.torproject.org/) by
@@ -30,5 +30,5 @@ the form `address:port`.
 
 Hidden services are also supported :
 ```
-lightningd --testnet --disable-plugin bcli --plugin $PWD/py-sauron/sauron.py --sauron-tor-proxy localhost:9050 --sauron-api-endpoint http://explorerzydxu5ecjrkwceayqybizmpjjznk5izmitf2modhcusuqlid.onion/testnet/api/
+lightningd --testnet --disable-plugin bcli --plugin $PWD/sauron.py --sauron-tor-proxy localhost:9050 --sauron-api-endpoint http://explorerzydxu5ecjrkwceayqybizmpjjznk5izmitf2modhcusuqlid.onion/testnet/api/
 ```

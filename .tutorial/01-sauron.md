@@ -6,15 +6,15 @@ We're going to write a corelightning plugin that intercepts all the wire message
 
 The Lightning Network is a Layer 2 payment channel protocol on top of Bitcoin's base layer settlement network. You open lightning channels with an on-chain transaction locking bitcoin to a 2/2 Multisig with your channel peer. You & your channel peer each hold asymmetric transactions which you can update as fast as you can communicate to sling payments back and forth. For a more in depth overview of the Lightning Network, I encourage you to check out these resources:
 
-1. a
-2. b
+1. [Mastering the Lightning Network](https://github.com/lnbook/lnbook)
+2. []
 3. c
 
 For our purposes, what we need to know is that running a Lightning Node on this layer 2 requires you to know a bunch of information about the current state of Bitcoin at layer 1: 
 
 1. Is your channel still open? has your peer published their closing TX?
 2. Have they published an old channel state to try to steal your funds?
-3. and a couple more things...
+3. What are the feerates we should use for our channel updates?
 
 The way lightning nodes normally answer these questions is by running alongside a bitcoin node (full or pruned).
 
