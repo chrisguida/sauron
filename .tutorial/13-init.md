@@ -1,7 +1,5 @@
 # Init: Setting up the Plugin
 
-
-
 `init`: Initializes the Sauron Plugin
 ```python
 @plugin.init()

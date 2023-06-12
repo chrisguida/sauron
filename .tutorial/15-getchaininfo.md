@@ -47,6 +47,8 @@ chains = {
         "main",
         "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943":
         "test",
+        "00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6",
+        "signet"
         "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206":
         "regtest"
     }
@@ -78,7 +80,7 @@ During `ibd=true`, the `headercount` will be up to the chain tip (most recent bl
 We're not able to hit against an esplora api if it isn't fully synced, so we can just get the most recent chain tip, verify there isn't an error, set `ibd` to false, and set the remaining return values.
 
 ```python
-chaintip_req = f"{plugin.api_endpoint}/block-height/0"
+chaintip_req = f"{plugin.api_endpoint}/blocks/tip/height"
 chaintip_res = fetch(genesis_req) # this just returns an int of the current blockheight
 blockheight = chaintip_res.text
 

@@ -47,7 +47,7 @@ rawblock_req = f"{plugin.api_endpoint}/block/{blockhash_res.text}/raw"
 # Use a retry loop incase Esplora returns incomplete blockdata
 while True:
     rawblock_res = fetch(rawblock_url)
-    if rawblock_res.status_code != 200:
+    if not rawblock_res.status_code == 200:
         # rawblock not found at all, return Nones
         return {
             "blockhash": None,
