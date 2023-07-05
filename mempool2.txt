@@ -1,1 +1,1 @@
-{"fastestFee":16,"halfHourFee":15,"hourFee":13,"economyFee":10,"minimumFee":5}
+{"fastestFee":6,"halfHourFee":6,"hourFee":6,"economyFee":4,"minimumFee":2}

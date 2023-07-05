@@ -5,10 +5,7 @@ A Bitcoin backend plugin relying on [Esplora](https://github.com/Blockstream/esp
 
 ### About
 
-It allows C-lightning to run without needing a *local* `bitcoind`, and can be either
-self-hosted (Esplora is Open Source, and self hosting it is basically a `docker` one-liner).
-
-This is still a WIP, so is the API C-lightning side. So not to be used for real.
+It allows Core Lightning to run without needing a *local* `bitcoind`, and can be either self-hosted (Esplora is Open Source, and self hosting it is basically a `docker` one-liner) or hit against a public esplora API.
 
 
 ### Run

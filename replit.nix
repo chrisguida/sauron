@@ -1,5 +1,6 @@
 { pkgs }: {
   deps = [
+    pkgs.pstree
     pkgs.bitcoin
     pkgs.clightning
     pkgs.python310Full

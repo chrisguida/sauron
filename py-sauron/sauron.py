@@ -10,12 +10,22 @@ from pyln.client import Plugin
 
 plugin = Plugin(dynamic=False)
 plugin.sauron_socks_proxies = None
-plugin.sauron_network = "test"
+plugin.sauron_network = "main"
+
+plugin.add_option(
+    "sauron-api-endpoint", "",
+    "The URL of the esplora instance to hit (including '/api').")
+
+plugin.add_option(
+    "sauron-tor-proxy", "",
+    "Tor's SocksPort address in the form address:port, don't specify the"
+    " protocol.  If you didn't modify your torrc you want to put"
+    "'localhost:9050' here.")
 
 
 class SauronError(Exception):
     """Exception raised when there is an error in the Sauron plugin."""
-    pass
+    plugin.log("Sauron error: {}".format(sys.exc_info()[1]))
 
 
 def fetch(url):
@@ -104,12 +114,10 @@ def getchaininfo(plugin, **kwargs):
         "main",
         "000000000933ea01ad0ee984209779baaec3ced90fa3f408719526f8d77f4943":
         "test",
-        "00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6",
-        "signet"
-        "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206":
-        "regtest",
         "00000008819873e925422c1ff0f99f7cc9bbb232af63a077a480a3633bee1ef6":
-        "mutiny"
+        "signet",
+        "0f9188f13cb7b2c71f2a335e3a4fc328bf5beb436012afca590b1a11466e2206":
+        "regtest"
     }
 
     genesis_req = fetch(blockhash_url)
@@ -128,15 +136,9 @@ def getchaininfo(plugin, **kwargs):
     if genesis_req.text not in chains.keys():
         raise SauronError("Unsupported network")
 
-    # handle mutiny signet, called just signet in corelightning but works
-    if chains[genesis_req.text] == "mutiny":
-        plugin.sauron_network = "signet"
-    else:
-        plugin.sauron_network = chains[genesis_req.text]
-
-    # We wouldn't be able to hit it if its bitcoind wasn't synced, so
+    # We wouldn't be able to hit the esplora if its bitcoind wasn't synced, so
     # ibd = false and headercount = blockcount
-    
+
     return {
         "chain": plugin.sauron_network,
         "blockcount": blockcount_req.text,
@@ -181,8 +183,6 @@ def getrawblock(plugin, height, **kwargs):
             }
         # We may download partial/incomplete files for Esplora. Best effort to
         # not crash lightningd by sending an invalid (trimmed) block.
-        # NOTE: this will eventually be fixed upstream, at which point we should
-        # just reuse the retry handler.
         content_len = block_req.headers.get("Content-length")
         if content_len is None:
             break
@@ -316,7 +316,9 @@ def estimatefees(plugin, **kwargs):
     economy = feerates["economyFee"]
     minimum = feerates["minimumFee"]
 
-    assert all(fee is not None for fee in [fastest, half_hour, hour, economy, minimum]), "Fee values can't be None."
+    assert all(fee is not None
+               for fee in [fastest, half_hour, hour, economy, minimum
+                           ]), "Fee values can't be None."
 
     return {
         "opening": half_hour,
@@ -329,15 +331,5 @@ def estimatefees(plugin, **kwargs):
         "max_acceptable": fastest * 10,
     }
 
-
-plugin.add_option(
-    "sauron-api-endpoint", "",
-    "The URL of the esplora instance to hit (including '/api').")
-
-plugin.add_option(
-    "sauron-tor-proxy", "",
-    "Tor's SocksPort address in the form address:port, don't specify the"
-    " protocol.  If you didn't modify your torrc you want to put"
-    "'localhost:9050' here.")
 
 plugin.run()
