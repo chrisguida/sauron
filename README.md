@@ -2,8 +2,11 @@
 
 A Bitcoin backend plugin relying on [Esplora](https://github.com/Blockstream/esplora).
 
+### About This Repo
 
-### About
+This repo contains a tutorial that you can run on replit.com by clicking [here](https://replit.com/github/Kodylow/sauron).
+
+### About Sauron
 
 It allows Core Lightning to run without needing a *local* `bitcoind`, and can be either self-hosted (Esplora is Open Source, and self hosting it is basically a `docker` one-liner) or hit against a public esplora API.
 
